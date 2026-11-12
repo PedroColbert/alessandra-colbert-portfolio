@@ -332,3 +332,68 @@ html.scene-jump{scroll-behavior:auto!important;scroll-snap-type:none!important}
   .scene-transition__outline::before,.scene-transition__outline::after{width:7px;height:7px}
 }
 @media(prefers-reduced-motion:reduce){.scene-transition{display:none!important}.hero-button::after,.nav>a.nav-contact::before{transition:none}}
+
+/* --- refinement update requested by Alessandra --- */
+/* Remove large decorative initials and the pink transition ball */
+.about-deco,
+.scene-transition__sun{display:none !important;}
+
+/* Bring more pink presence to the overall interface */
+:root{
+  --paper:#fcf5f5;
+  --paper-2:#fff9f9;
+  --pink:#efd0d5;
+  --pinkStrong:#dea9b4;
+  --line:rgba(184,120,136,.18);
+}
+html{background:linear-gradient(180deg,#fdf6f7 0%,#fffafa 26%,#f9eef0 100%);} 
+body{background:
+  radial-gradient(circle at top right,rgba(241,199,209,.72),transparent 34%),
+  radial-gradient(circle at 8% 24%,rgba(247,220,226,.52),transparent 22%),
+  linear-gradient(180deg,#fcf4f5 0%,#fff8f8 26%,#f7eef0 100%);} 
+
+.site-header.scrolled{background:rgba(253,246,247,.86);} 
+.brand-mark span,
+.quote-author,
+.scene-transition__kicker span{color:#c98090;}
+
+.hero::before{background:linear-gradient(140deg,rgba(255,255,255,.76),rgba(250,236,239,.66));}
+.hero::after{background:radial-gradient(circle at 30% 35%,rgba(244,209,217,.88),rgba(241,221,225,.35) 44%,rgba(255,255,255,0) 70%);} 
+.hero-intro{color:#8c6874;}
+.hero h1{max-width:680px;}
+.hero h1 em{color:#8f5b69;}
+.hero-heading-sub{color:#9d6f7b;}
+.hero-button.solid{background:linear-gradient(135deg,#d999a7,#b87383);color:#fff;}
+.hero-button.ghost{background:rgba(255,243,245,.76);border:1px solid rgba(201,135,149,.22);}
+.hero-float{background:rgba(255,246,247,.82);border:1px solid rgba(226,180,190,.4);} 
+.orb-one{background:radial-gradient(circle at 35% 35%,#f7e4e8,#efc3cf);}
+.orb-two{background:#ffeef1;}
+
+.about-grid,
+.philosophy-panel,
+.project-section .wrap,
+.watercolor-section .wrap,
+.phonics-section .wrap,
+.contact-section .wrap{background:linear-gradient(180deg,rgba(255,255,255,.76),rgba(255,247,248,.64));}
+.principle{background:rgba(255,248,249,.78);border:1px solid rgba(235,202,209,.5);} 
+.numeracy-text{background:linear-gradient(180deg,#fae8eb,#f5dde3);} 
+.contact-design{background:linear-gradient(180deg,rgba(255,252,252,.86),rgba(249,238,241,.76));}
+.contact-design::before{background:radial-gradient(circle at 50% 50%,rgba(232,188,200,.82),rgba(247,232,236,.28) 56%,rgba(255,255,255,0) 68%);} 
+.autocarousel{background:linear-gradient(180deg,rgba(255,250,251,.82),rgba(250,239,242,.78));}
+.site-footer{color:#8a7179;}
+
+/* Transition screen: keep the cinematic wash but without the pink ball */
+.scene-transition{background:linear-gradient(120deg,#fcf5f5 0%,#f8eaed 45%,#f3d9df 100%);} 
+.scene-transition__wash{background:
+  radial-gradient(circle at 16% 24%,rgba(255,255,255,.92),transparent 0 32%),
+  linear-gradient(112deg,rgba(255,255,255,.36) 0%,rgba(255,239,243,.68) 37%,rgba(241,204,213,.9) 100%);} 
+.scene-transition__outline{border-color:rgba(180,126,138,.18);} 
+.scene-transition__bottom{border-top-color:rgba(184,131,143,.35);color:#8c6c75;} 
+
+@media(max-width:760px){
+  body{background:
+    radial-gradient(circle at top right,rgba(241,199,209,.62),transparent 32%),
+    linear-gradient(180deg,#fcf4f5 0%,#fff8f8 26%,#f7eef0 100%);} 
+  .hero h1{font-size:clamp(52px,16vw,78px);} 
+  .hero-heading-sub{font-size:10px;}
+}
