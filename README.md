@@ -4,11 +4,9 @@ Site estático e responsivo, baseado na apresentação original em PDF.
 
 ## Como abrir
 
-1. Extraia o arquivo ZIP.
-2. Abra `index.html` no navegador, ou hospede a pasta inteira em um serviço de sites estáticos.
-3. Não altere a estrutura da pasta `assets`, pois ela contém as imagens do site.
-
-Alternativamente, use o arquivo `Alessandra_Colbert_Portfolio_2026.html`, que já contém imagens, CSS e JavaScript em um único arquivo e pode ser aberto diretamente no navegador.
+1. Abra a [versão publicada](https://pedrocolbert.github.io/alessandra-colbert-portfolio/) ou clone este repositório.
+2. Para uso local, abra `index.html` no navegador; para publicar, hospede a pasta inteira em um serviço de sites estáticos.
+3. Mantenha a estrutura da pasta `assets`, que contém as imagens do site, junto com os arquivos CSS e JavaScript.
 
 ## Conteúdo
 
