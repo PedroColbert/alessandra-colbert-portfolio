@@ -1,0 +1,256 @@
+/* Enhancements loaded after styles.css and mobile-layout.css:
+   audit fixes, EN/PT, light/dark theme, CV button, Montessori section, horizontal carousel. */
+
+/* Click Spark colour */
+:root{--spark:#b87383}
+html[data-theme="dark"]{--spark:#e3a6b6}
+
+/* ---------- Language: both versions live in the markup; one is shown ---------- */
+html[data-lang="en"] [data-l="pt"],
+html[data-lang="pt"] [data-l="en"]{display:none!important}
+
+/* Language wrappers must be transparent: old rules like ".project-title span" or ".hero-float span"
+   would otherwise style them (colour, size, block display). Specificity (0,3,1) beats those rules. */
+html[data-lang] [data-l][data-l]{display:inline;margin:0;padding:0;font:inherit;color:inherit;letter-spacing:inherit;text-transform:inherit;flex-shrink:1}
+
+/* ---------- Fonts: only Inter and Cormorant Garamond are loaded ---------- */
+.hero-heading-sub{font-family:'Inter',system-ui,sans-serif}
+.site-footer span:first-child{font-family:'Inter',system-ui,sans-serif;font-size:13px;font-weight:700;letter-spacing:.2em}
+
+/* ---------- Readable text sizes (several labels were 7 to 10 px) ---------- */
+.brand-name{font-size:10px}
+.nav>a{font-size:12px}
+.eyebrow{font-size:12px}
+.hero-heading-sub{font-size:13px}
+.hero-button{font-size:12px}
+.quote-author{font-size:12px}
+.hero-float span{font-size:11px}
+.hero-float strong{font-size:13px}
+.hero-year{font-size:11px}
+.image-caption{font-size:13px}
+.project-index{font-size:11px}
+.principle p{font-size:14px}
+.numeracy-text p{font-size:14px}
+.photo-tile .photo-overlay{font-size:11px}
+.contact-links a,.contact-links p{font-size:14px}
+.contact-links span{font-size:12px}
+.closing-artwork-head p:last-child{font-size:14px}
+.site-footer{font-size:11px}
+.lightbox-figure figcaption{font-size:14px}
+
+/* ---------- Header: theme toggle and language flags ---------- */
+/* visual order: brand, navigation, tools (theme + language), menu button */
+.site-header>.nav{order:2;margin-left:auto}
+.header-tools{order:3;display:flex;align-items:center;gap:10px;margin-left:clamp(14px,2vw,28px)}
+.site-header>.menu-toggle{order:4}
+.theme-toggle{position:relative;display:grid;place-items:center;width:42px;height:42px;padding:0;border:1px solid rgba(184,120,136,.22);border-radius:50%;background:rgba(255,255,255,.5);color:var(--ink);cursor:pointer;transition:background-color .3s,transform .2s}
+.theme-toggle svg{grid-area:1/1;width:20px;height:20px;transition:transform .7s cubic-bezier(.16,1,.3,1),opacity .4s}
+.theme-toggle .sun{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.theme-toggle .moon{fill:currentColor}
+.theme-toggle .sun,html[data-theme="dark"] .theme-toggle .moon{transform:rotate(-90deg) scale(.4);opacity:0}
+html[data-theme="dark"] .theme-toggle .sun{transform:none;opacity:1}
+.theme-toggle .to-light,html[data-theme="dark"] .theme-toggle .to-dark{display:none}
+html[data-theme="dark"] .theme-toggle .to-light{display:inline}
+.theme-toggle:active{transform:scale(.92)}
+.lang-switch{display:flex;padding:3px;border-radius:999px;background:rgba(255,255,255,.5);border:1px solid rgba(184,120,136,.22)}
+.lang-switch button{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:0 10px 0 4px;border:0;border-radius:999px;background:transparent;color:var(--ink);font:700 12px/1 'Inter',system-ui,sans-serif;letter-spacing:.08em;cursor:pointer;transition:background-color .3s,color .3s}
+.lang-switch button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink,#fff)}
+.flag{width:24px;height:24px;border-radius:50%;flex:none;box-shadow:0 0 0 1px rgba(0,0,0,.08);transition:transform .45s cubic-bezier(.16,1,.3,1),filter .3s}
+.lang-switch button[aria-pressed="false"] .flag{filter:saturate(.6)}
+@media (hover:hover){
+  .theme-toggle:hover,.lang-switch button[aria-pressed="false"]:hover{background:rgba(222,169,180,.35)}
+  .lang-switch button:hover .flag{transform:rotate(-12deg) scale(1.08);filter:none}
+}
+.theme-toggle:focus-visible,.lang-switch button:focus-visible{outline:3px solid #ad626c;outline-offset:3px}
+@media(max-width:1024px){
+  .header-tools{margin-left:auto;margin-right:10px}
+}
+@media(max-width:760px){
+  .site-header{background:rgba(252,244,246,.94)}
+  .nav{background:rgba(252,244,246,.98)}
+  .brand-name{font-size:9px;letter-spacing:.12em}
+  .lang-code{display:none}
+  .lang-switch button{padding:0 4px;min-width:34px}
+  .theme-toggle{width:38px;height:38px}
+  .header-tools{gap:6px;margin-right:6px}
+}
+@media(max-width:420px){.brand-name{display:none}}
+
+/* ---------- Hero ---------- */
+.hero-button svg{width:16px;height:16px;margin-right:8px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.hero-button.cv{background:transparent;border:1px solid rgba(184,115,131,.55);color:#8f5b69}
+.hero-button.cv::after{background:rgba(236,192,196,.45)}
+/* the decorative "scroll" line crossed the text on tablets and phones */
+@media(max-width:1120px){.scroll-cue{display:none}}
+@media(max-width:760px){
+  .hero-kicker{font-size:11px}
+  .hero-heading-sub{font-size:11px}
+  .hero-button{font-size:11px}
+  .hero-actions .hero-button.cv{grid-column:1/-1}
+  .hero-quote p{font-size:13px}
+  .hero-quote .quote-author{font-size:11px}
+  .hero-microcopy{font-size:13px}
+  .hero-year{font-size:11px}
+  .eyebrow{font-size:11px}
+  .project-index{font-size:11px}
+  .site-footer{font-size:11px}
+}
+@media(max-width:359px){.hero-button{font-size:10.5px;letter-spacing:.05em}}
+
+/* ---------- Montessori quote + hands photo (contact section) ---------- */
+.contact-design{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:center;gap:5%;min-height:0;padding:clamp(40px,5vw,72px) clamp(28px,5vw,72px)}
+.contact-quote{max-width:none;margin:0;padding:0;align-self:center}
+.contact-quote p{font-size:clamp(32px,3.4vw,52px);line-height:1.12;text-wrap:balance}
+.contact-hands{position:relative;inset:auto;right:auto;bottom:auto;width:100%;max-width:520px;height:auto;margin:0;justify-self:center;align-self:center}
+.contact-hands .photo-tile{height:auto;aspect-ratio:4/5}
+.contact-hands .photo-tile img{object-position:50% 72%}
+@media(max-width:760px){
+  .contact-design{display:flex;flex-direction:column;align-items:stretch;gap:28px;padding:26px 18px 22px}
+  .contact-quote p{font-size:clamp(28px,8.4vw,40px)}
+  .contact-hands{width:100%;max-width:none;margin:0}
+}
+.contact-links a.contact-cv{color:#8f5b69;font-weight:600}
+.contact-links a.contact-cv i{font-style:normal;margin-left:6px}
+
+/* ---------- Carousel: horizontal paintings, shown whole (4:3 frames for 4:3 images) ---------- */
+.autocarousel .photo-tile{width:min(40vw,480px);min-width:260px;aspect-ratio:4/3}
+@media(max-width:760px){.autocarousel .photo-tile{width:80vw;min-width:80vw}}
+
+/* =================== Dark theme =================== */
+html[data-theme="dark"]{
+  --ink:#f5e9ee;--inksoft:#d3bec7;--muted:#ab959e;--paper:#171114;--paper-2:#1e161a;--blush:#2a1d23;
+  --pink:#4a2b36;--pinkStrong:#7a4556;--line:rgba(255,255,255,.1);--on-ink:#171114;
+  --shadow-lg:0 35px 90px rgba(0,0,0,.45);--shadow-md:0 22px 50px rgba(0,0,0,.38);--shadow-sm:0 10px 24px rgba(0,0,0,.3);
+  color-scheme:dark;background:#171114
+}
+html[data-theme="dark"] body{background:radial-gradient(circle at top right,rgba(120,58,78,.45),transparent 36%),radial-gradient(circle at 8% 24%,rgba(98,48,66,.32),transparent 24%),linear-gradient(180deg,#171114 0%,#1b1418 40%,#171114 100%);color:var(--ink)}
+html[data-theme="dark"] ::selection{background:#7a4556;color:#fff}
+html[data-theme="dark"] .site-header.scrolled,html[data-theme="dark"] .site-header{border-bottom-color:rgba(255,255,255,.06)}
+html[data-theme="dark"] .site-header.scrolled{background:rgba(23,17,20,.86)}
+@media(max-width:760px){html[data-theme="dark"] .site-header{background:rgba(23,17,20,.94)}html[data-theme="dark"] .nav{background:rgba(23,17,20,.98)}}
+@media(min-width:761px) and (max-width:1024px){html[data-theme="dark"] .nav{background:rgba(23,17,20,.97)}}
+html[data-theme="dark"] .brand-mark span{color:#e3a6b6}
+html[data-theme="dark"] .nav>a.nav-contact{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.05)}
+html[data-theme="dark"] .nav-contact:hover{color:var(--on-ink)}
+html[data-theme="dark"] .skip-link{color:var(--on-ink)}
+html[data-theme="dark"] .theme-toggle,html[data-theme="dark"] .lang-switch{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14)}
+html[data-theme="dark"] .menu-toggle span{background:var(--ink)}
+/* hero */
+html[data-theme="dark"] .hero::before{background:linear-gradient(140deg,rgba(44,31,37,.9),rgba(32,23,28,.8));border-color:rgba(255,255,255,.06)}
+html[data-theme="dark"] .hero::after{background:radial-gradient(circle at 30% 35%,rgba(150,72,98,.55),rgba(90,44,60,.25) 44%,rgba(0,0,0,0) 70%)}
+html[data-theme="dark"] .hero-kicker{color:#c9b3bc}
+html[data-theme="dark"] .hero h1 em{color:#e3a6b6}
+html[data-theme="dark"] .hero-heading-sub{color:#d8a5b3}
+html[data-theme="dark"] .hero-quote p,html[data-theme="dark"] .hero-microcopy{color:#d3bec7}
+html[data-theme="dark"] .hero-quote{border-top-color:rgba(255,255,255,.1)}
+html[data-theme="dark"] .quote-author{color:#e3a6b6}
+html[data-theme="dark"] .hero-button.ghost{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18);color:var(--ink)}
+html[data-theme="dark"] .hero-button.cv{border-color:rgba(227,166,182,.5);color:#e3a6b6}
+html[data-theme="dark"] .hero-arch{background:linear-gradient(180deg,#5b7d99 0%,#3c4f63 58%,#2a2127 100%)}
+html[data-theme="dark"] .hero-float{background:rgba(40,28,34,.86);border-color:rgba(255,255,255,.1)}
+html[data-theme="dark"] .hero-float span{color:#c9a3b0}
+html[data-theme="dark"] .hero-float strong{color:var(--ink)}
+html[data-theme="dark"] .hero-year{background:rgba(40,28,34,.86);color:#d8b8c3}
+html[data-theme="dark"] .orb-one{background:radial-gradient(circle at 35% 35%,#7a4556,#4a2b36);box-shadow:none}
+html[data-theme="dark"] .orb-two{background:#3a2730;box-shadow:none}
+/* cards and sections */
+html[data-theme="dark"] .about-grid,html[data-theme="dark"] .philosophy-panel,html[data-theme="dark"] .project-section .wrap,
+html[data-theme="dark"] .watercolor-section .wrap,html[data-theme="dark"] .phonics-section .wrap,html[data-theme="dark"] .contact-section .wrap{background:linear-gradient(180deg,rgba(40,28,34,.82),rgba(30,22,26,.74));border-color:rgba(255,255,255,.06)}
+html[data-theme="dark"] .principle{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
+html[data-theme="dark"] .principle-index{color:#e3a6b6}
+html[data-theme="dark"] .project-description,html[data-theme="dark"] .body-copy,html[data-theme="dark"] .about-copy .body-copy,
+html[data-theme="dark"] .numeracy-text p,html[data-theme="dark"] .principle p,html[data-theme="dark"] .philosophy-head>p:last-child,
+html[data-theme="dark"] .watercolor-desc p,html[data-theme="dark"] .contact-links a,html[data-theme="dark"] .contact-links p,
+html[data-theme="dark"] .closing-artwork-head p:last-child{color:#d3bec7}
+html[data-theme="dark"] .image-caption,html[data-theme="dark"] .project-index{color:#b9a2ab}
+html[data-theme="dark"] .project-title span{color:#e3a6b6}
+html[data-theme="dark"] .fine-line{background:linear-gradient(90deg,#e3a6b6,transparent)}
+html[data-theme="dark"] .numeracy-text{background:linear-gradient(180deg,#3a2530,#2e1f26)}
+html[data-theme="dark"] .art-room{background:#21171b}
+html[data-theme="dark"] .art-room-title{color:rgba(227,166,182,.12)}
+html[data-theme="dark"] .photo-tile{background:#2a1f24}
+/* contact */
+html[data-theme="dark"] .contact-design{background:linear-gradient(180deg,rgba(44,31,37,.9),rgba(30,22,26,.82));border-color:rgba(255,255,255,.06)}
+html[data-theme="dark"] .contact-design::before{background:radial-gradient(circle at 50% 50%,rgba(122,69,86,.55),rgba(74,43,54,.2) 56%,rgba(0,0,0,0) 68%)}
+html[data-theme="dark"] .contact-quote p{color:var(--ink)}
+html[data-theme="dark"] .contact-links a,html[data-theme="dark"] .contact-links p{border-bottom-color:rgba(255,255,255,.1)}
+html[data-theme="dark"] .contact-links span{color:#b9a2ab}
+html[data-theme="dark"] .contact-links a:hover,html[data-theme="dark"] .contact-links a.contact-cv{color:#e3a6b6}
+html[data-theme="dark"] .closing-artwork{border-top-color:rgba(255,255,255,.08)}
+html[data-theme="dark"] .autocarousel{background:linear-gradient(180deg,rgba(40,28,34,.82),rgba(30,22,26,.74));border-color:rgba(255,255,255,.06)}
+html[data-theme="dark"] .autocarousel::before{background:linear-gradient(90deg,#1e161a,rgba(30,22,26,0))}
+html[data-theme="dark"] .autocarousel::after{background:linear-gradient(270deg,#1e161a,rgba(30,22,26,0))}
+html[data-theme="dark"] .site-footer{color:#b9a2ab;border-top-color:rgba(255,255,255,.12)}
+/* chapter transition */
+html[data-theme="dark"] .scene-transition{background:linear-gradient(120deg,#171114 0%,#2a1c22 45%,#3a2430 100%);color:var(--ink)}
+html[data-theme="dark"] .scene-transition__wash{background:radial-gradient(circle at 16% 24%,rgba(255,255,255,.06),transparent 0 32%),linear-gradient(112deg,rgba(0,0,0,0) 0%,rgba(90,44,60,.35) 37%,rgba(122,69,86,.5) 100%)}
+html[data-theme="dark"] .scene-transition__outline{border-color:rgba(255,255,255,.12)}
+html[data-theme="dark"] .scene-transition__kicker,html[data-theme="dark"] .scene-transition__overline,html[data-theme="dark"] .scene-transition__bottom,html[data-theme="dark"] .scene-transition__chapter{color:#c9a3b0}
+html[data-theme="dark"] .scene-transition__bottom{border-top-color:rgba(255,255,255,.2)}
+/* smooth switch */
+html.theme-switching,html.theme-switching *,html.theme-switching *::before,html.theme-switching *::after{transition:none!important}
+
+/* =================== Final contact: an open, full-width section (no card edges) ===================
+   better-layout: one primary action, space before lines, label above value on phones.
+   better-ui: shadows for elevation (no depth-only borders), press scale 0.96. */
+.contact-end{position:relative;isolation:isolate;margin-top:clamp(16px,2vw,32px);padding:clamp(72px,9vw,136px) 0 0}
+.contact-end::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(55% 65% at 82% 35%,rgba(241,199,209,.55),rgba(241,199,209,0) 72%),
+             radial-gradient(45% 55% at 12% 78%,rgba(247,220,226,.55),rgba(247,220,226,0) 72%)}
+.contact-end__inner{width:min(calc(100% - 80px),1180px);margin-inline:auto}
+.contact-final{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(36px,6vw,96px);align-items:center;margin:0;padding:0 0 clamp(64px,7vw,110px);border:0}
+.contact-intro{min-width:0}
+.contact-final h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(46px,6vw,92px);line-height:.95;letter-spacing:-.03em;margin:14px 0 18px;text-transform:none}
+.contact-final h2 em{font-style:italic;font-weight:500;color:#8f5b69}
+.contact-lead{max-width:34ch;margin:0 0 28px;font-size:clamp(16px,1.25vw,19px);line-height:1.6;color:#51494d}
+.contact-actions{display:flex;flex-wrap:wrap;gap:12px}
+.contact-list{min-width:0;margin:0;padding:6px clamp(22px,2.4vw,34px);border-radius:28px;border:1px solid transparent;
+  background:rgba(255,255,255,.66);
+  box-shadow:0 0 0 1px rgba(184,120,136,.10),0 1px 2px rgba(80,40,55,.05),0 14px 36px -10px rgba(120,60,80,.18)}
+.contact-list>div{display:grid;grid-template-columns:minmax(0,8.5rem) minmax(0,1fr);gap:4px 18px;align-items:baseline;padding:20px 0}
+.contact-list>div+div{border-top:1px solid rgba(36,28,34,.07)}
+.contact-list dt{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#80767b}
+.contact-list dd{margin:0;font-size:16px;line-height:1.5;color:var(--ink);overflow-wrap:break-word}
+.contact-list dd a{text-decoration:underline;text-decoration-color:rgba(184,115,131,.45);text-underline-offset:4px;text-decoration-thickness:1px;transition:color .15s ease-out,text-decoration-color .15s ease-out}
+@media(hover:hover){.contact-list dd a:hover{color:#8f5b69;text-decoration-color:currentColor}}
+.contact-end .site-footer{margin:0;padding:24px 0 34px;border-top:1px solid rgba(36,28,34,.1)}
+@media(max-width:1120px){.contact-end__inner{width:calc(100% - 56px)}}
+@media(max-width:900px){.contact-final{grid-template-columns:minmax(0,1fr);gap:40px;align-items:start}}
+@media(max-width:760px){
+  .contact-end__inner{width:calc(100% - 32px)}
+  .contact-end::before{background:radial-gradient(90% 50% at 80% 30%,rgba(241,199,209,.5),rgba(241,199,209,0) 72%),radial-gradient(80% 45% at 15% 85%,rgba(247,220,226,.5),rgba(247,220,226,0) 72%)}
+}
+@media(max-width:560px){
+  .contact-end{padding-top:64px}
+  .contact-final h2{font-size:clamp(42px,13vw,58px)}
+  .contact-actions{flex-direction:column;align-items:stretch}
+  .contact-actions .hero-button{width:100%}
+  .contact-list{padding:4px 18px;border-radius:24px}
+  .contact-list>div{grid-template-columns:minmax(0,1fr);padding:15px 0}
+}
+/* press feedback (better-ui: 0.96, 150ms ease-out, only when motion is welcome) */
+.hero-button{transition:transform .25s var(--ease),box-shadow .25s var(--ease),background-color .25s,color .25s,scale .15s ease-out}
+@media(prefers-reduced-motion:no-preference){.hero-button:active{scale:.96}}
+/* dark theme */
+html[data-theme="dark"] .contact-end::before{background:radial-gradient(55% 65% at 82% 35%,rgba(122,69,86,.45),rgba(122,69,86,0) 72%),radial-gradient(45% 55% at 12% 78%,rgba(90,44,60,.4),rgba(90,44,60,0) 72%)}
+html[data-theme="dark"] .contact-final h2 em{color:#e3a6b6}
+html[data-theme="dark"] .contact-lead{color:#d3bec7}
+html[data-theme="dark"] .contact-list{background:rgba(255,255,255,.045);box-shadow:0 0 0 1px rgba(255,255,255,.07),0 18px 40px -12px rgba(0,0,0,.5)}
+html[data-theme="dark"] .contact-list>div+div{border-top-color:rgba(255,255,255,.08)}
+html[data-theme="dark"] .contact-list dt{color:#b9a2ab}
+html[data-theme="dark"] .contact-list dd a{text-decoration-color:rgba(227,166,182,.5)}
+@media(hover:hover){html[data-theme="dark"] .contact-list dd a:hover{color:#e3a6b6}}
+html[data-theme="dark"] .contact-end .site-footer{border-top-color:rgba(255,255,255,.1)}
+
+/* No hard edges in the closing area: the glow fades in from the top, and the closing section
+   (Montessori quote + gallery) loses its outer card frame; its inner cards keep their own shape. */
+.contact-end::before{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 38%);mask-image:linear-gradient(180deg,transparent 0,#000 38%)}
+#closing .wrap,html[data-theme="dark"] #closing .wrap{background:none;border:0;box-shadow:none;padding-inline:0;border-radius:0}
+#closing .closing-artwork{border-top:0}
+@media(max-width:560px){
+  .contact-end .site-footer{flex-direction:column;align-items:flex-start;gap:10px}
+  .contact-end .site-footer>span:nth-child(2){max-width:none}
+}
+/* tighter hand-off from the gallery to the contact section */
+#closing.section-pad{padding-bottom:clamp(16px,2vw,32px)}
+.contact-end{padding-top:clamp(56px,7vw,104px)}
