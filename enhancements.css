@@ -254,3 +254,18 @@ html[data-theme="dark"] .contact-end .site-footer{border-top-color:rgba(255,255,
 /* tighter hand-off from the gallery to the contact section */
 #closing.section-pad{padding-bottom:clamp(16px,2vw,32px)}
 .contact-end{padding-top:clamp(56px,7vw,104px)}
+
+/* ---------- Click sounds toggle ---------- */
+.sound-toggle svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sound-toggle .spk{fill:currentColor;stroke:none}
+.sound-toggle .snd-off,.sound-toggle[aria-pressed="false"] .snd-on{transform:scale(.4);opacity:0}
+.sound-toggle[aria-pressed="false"] .snd-off{transform:none;opacity:1}
+.sound-toggle[aria-pressed="false"]{color:color-mix(in srgb,var(--ink) 62%,transparent)}
+.sound-toggle:focus-visible{outline:3px solid #ad626c;outline-offset:3px}
+@media(max-width:380px){
+  .header-tools{gap:4px;margin-right:4px}
+  .theme-toggle{width:34px;height:34px}
+  .theme-toggle svg{width:18px;height:18px}
+  .lang-switch button{min-width:30px;padding:0 2px}
+}
+@media(prefers-reduced-motion:reduce){.theme-toggle svg{transition:opacity .2s}}
