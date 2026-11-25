@@ -19,9 +19,30 @@
   try { saved = localStorage.getItem(KEY); } catch (e) {}
   let on = saved ? saved === 'on' : true;
 
+  /* iPhone: web sounds normally follow the silent switch. The site owner chose to play them
+     anyway, so ask for the "playback" audio session (Safari 16.4+). Older iOS gets the same
+     result from a silent <audio> element started inside the first gesture. */
+  const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  let silentTrack = null;
+  function playbackSession() {
+    try {
+      if (navigator.audioSession) { navigator.audioSession.type = 'playback'; return; }
+    } catch (e) {}
+    if (!iOS || silentTrack) return;
+    const n = 1600, wav = new DataView(new ArrayBuffer(44 + n)), str = (o, t) => [...t].forEach((c, i) => wav.setUint8(o + i, c.charCodeAt(0)));
+    str(0, 'RIFF'); wav.setUint32(4, 36 + n, true); str(8, 'WAVEfmt '); wav.setUint32(16, 16, true);
+    wav.setUint16(20, 1, true); wav.setUint16(22, 1, true); wav.setUint32(24, 8000, true); wav.setUint32(28, 8000, true);
+    wav.setUint16(32, 1, true); wav.setUint16(34, 8, true); str(36, 'data'); wav.setUint32(40, n, true);
+    for (let i = 0; i < n; i++) wav.setUint8(44 + i, 128);
+    silentTrack = new Audio(URL.createObjectURL(new Blob([wav], { type: 'audio/wav' })));
+    silentTrack.setAttribute('playsinline', '');
+    silentTrack.play().catch(() => { silentTrack = null; });
+  }
+
   let ctx = null, out = null, noise = null;
   function audio() {
     if (!ctx) {
+      try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
       ctx = new AC();
       out = ctx.createGain();
       out.gain.value = 0.55;
@@ -35,6 +56,24 @@
     if (ctx.state !== 'running') ctx.resume();   // 'suspended', or iOS 'interrupted' after a call or app switch
     return ctx;
   }
+
+  /* Safari on iPhone only starts audio from certain gestures (touchend, click), and older
+     versions also need a buffer to start inside that gesture. Do both on every one of them,
+     so whichever event Safari accepts unlocks the sound scheduled by the tap. */
+  function unlock() {
+    if (!on) return;
+    const wasRunning = ctx && ctx.state === 'running';
+    const c = audio();
+    if (wasRunning) return;            // already unlocked; nothing to do
+    playbackSession();
+    const s = c.createBufferSource();
+    s.buffer = c.createBuffer(1, 1, 22050);
+    s.connect(c.destination);
+    s.start(0);
+  }
+  document.addEventListener('touchend', unlock, { passive: true, capture: true });
+  document.addEventListener('click', unlock, { capture: true });
+  document.addEventListener('keydown', unlock, { capture: true });
 
   /* One soft mallet note: a sine with a slight pitch settle, plus a fast-fading overtone. */
   function note(freq, delay = 0, gain = 0.16, decay = 0.2) {
@@ -145,6 +184,22 @@
       Math.hypot(e.clientX - lastPress.x, e.clientY - lastPress.y) < 12;
     if (!already) play(soundFor(e.target, false));
   });
+
+  /* Diagnostics for testing on a phone: open the site with ?som=teste to see the audio state. */
+  if (/[?&]som=teste\b/.test(location.search)) {
+    const box = document.createElement('div');
+    Object.assign(box.style, { position: 'fixed', left: '8px', bottom: '8px', zIndex: '10000', maxWidth: 'calc(100% - 16px)', padding: '8px 10px', borderRadius: '10px', background: 'rgba(20,12,16,.88)', color: '#fff', font: '12px/1.45 ui-monospace,monospace', pointerEvents: 'none', whiteSpace: 'pre-wrap' });
+    document.body.appendChild(box);
+    const seen = [];
+    const note = t => { seen.push(t); if (seen.length > 4) seen.shift(); };
+    ['pointerup', 'touchend', 'click'].forEach(t => document.addEventListener(t, e => note(t + (e.pointerType ? ':' + e.pointerType : '')), { capture: true, passive: true }));
+    const draw = () => {
+      let session = 'n/a';
+      try { if (navigator.audioSession) session = navigator.audioSession.type; } catch (e) {}
+      box.textContent = `som: ${on ? 'ligado' : 'desligado'} | iOS: ${iOS}\naudio: ${ctx ? ctx.state + ' t=' + ctx.currentTime.toFixed(2) : 'ainda não criado'}\nsessão: ${session}${silentTrack ? ' + faixa muda' : ''}\neventos: ${seen.join(' › ') || '-'}`;
+    };
+    draw(); setInterval(draw, 400);
+  }
 
   if (btn) {
     const sync = () => btn.setAttribute('aria-pressed', String(on));
