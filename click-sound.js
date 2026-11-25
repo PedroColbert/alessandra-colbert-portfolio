@@ -4,7 +4,8 @@
  * the photo viewer, theme and language switches get their own short phrases; a click on
  * empty space plays a faint tick that pairs with the click spark.
  * Visitors turn it on or off with the speaker button in the header (saved as "ac-sound").
- * It starts on, except when the system asks for reduced motion.
+ * It starts on. On phones a tap plays on finger lift; a finger that scrolls stays silent.
+ * iPhones follow the ring/silent switch for web sounds, like the system keyboard clicks.
  */
 (() => {
   'use strict';
@@ -16,7 +17,7 @@
   const root = document.documentElement;
   let saved = null;
   try { saved = localStorage.getItem(KEY); } catch (e) {}
-  let on = saved ? saved === 'on' : !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let on = saved ? saved === 'on' : true;
 
   let ctx = null, out = null, noise = null;
   function audio() {
@@ -31,7 +32,7 @@
       const d = noise.getChannelData(0);
       for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
     }
-    if (ctx.state === 'suspended') ctx.resume();
+    if (ctx.state !== 'running') ctx.resume();   // 'suspended', or iOS 'interrupted' after a call or app switch
     return ctx;
   }
 
@@ -114,19 +115,35 @@
     try { SOUNDS[name](); } catch (e) {}
   }
 
-  /* Same timing as the click spark: mouse plays on press, touch and keyboard on click
-     (so a finger that scrolls the page stays silent). */
+  /* Mouse plays on press. Touch and pen play when a short, still tap lifts: iPhones send no
+     click for taps on plain text, and a scroll ends in pointercancel, so it stays silent.
+     Keyboard (and anything else) plays on click. Each press plays once. */
   let lastPress = { time: -1e9, x: 0, y: 0 };
+  let touch = null;
+  const pressed = (x, y) => { lastPress = { time: performance.now(), x, y }; };
   document.addEventListener('pointerdown', e => {
-    if (e.pointerType !== 'mouse' || e.button !== 0) return;
-    lastPress = { time: performance.now(), x: e.clientX, y: e.clientY };
+    if (e.pointerType === 'mouse') {
+      if (e.button !== 0) return;
+      pressed(e.clientX, e.clientY);
+      if (e.target instanceof Element) play(soundFor(e.target, true));
+    } else if (e.isPrimary) {
+      touch = { id: e.pointerId, x: e.clientX, y: e.clientY, time: performance.now() };
+    }
+  }, { passive: true });
+  document.addEventListener('pointerup', e => {
+    if (e.pointerType === 'mouse' || !touch || e.pointerId !== touch.id) return;
+    const tap = performance.now() - touch.time < 650 && Math.hypot(e.clientX - touch.x, e.clientY - touch.y) < 10;
+    touch = null;
+    if (!tap) return;
+    pressed(e.clientX, e.clientY);
     if (e.target instanceof Element) play(soundFor(e.target, true));
   }, { passive: true });
+  document.addEventListener('pointercancel', () => { touch = null; }, { passive: true });
   document.addEventListener('click', e => {
     if (!(e.target instanceof Element)) return;
-    const fromMouse = e.detail !== 0 && performance.now() - lastPress.time < 700 &&
+    const already = e.detail !== 0 && performance.now() - lastPress.time < 700 &&
       Math.hypot(e.clientX - lastPress.x, e.clientY - lastPress.y) < 12;
-    if (!fromMouse) play(soundFor(e.target, false));
+    if (!already) play(soundFor(e.target, false));
   });
 
   if (btn) {
